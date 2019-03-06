@@ -65,7 +65,11 @@ public class AppConfig {
     @Value(value = "${redis.host}")
     private String redisHost;
     @Value(value = "${redis.port}")
-    private String redisPort;
+    private Integer redisPort;
+    @Value(value = "${redis.password}")
+    private String redisPassword;
+    @Value(value = "${redis.database}")
+    private Integer redisDatabase;
     
     public static void main(String[] args) {
         SpringApplication.run(AppConfig.class, args);
@@ -74,7 +78,7 @@ public class AppConfig {
     @Bean
     public EmbeddedServletContainerFactory servletContainer(){
         TomcatEmbeddedServletContainerFactory factory = new TomcatEmbeddedServletContainerFactory();
-        factory.setPort(8888);
+        factory.setPort(81);
         return factory;
     }
     
@@ -125,8 +129,9 @@ public class AppConfig {
     public RedisConnectionFactory redisConnectionFactory() {
         JedisConnectionFactory connectionFactory = new JedisConnectionFactory();
         connectionFactory.setHostName(redisHost);
-        connectionFactory.setPort(Integer.valueOf(redisPort));
-        //connectionFactory.setPassword(redisPassword);
+        connectionFactory.setPort(redisPort);
+        connectionFactory.setPassword(redisPassword);
+        connectionFactory.setDatabase(redisDatabase);
         connectionFactory.setUsePool(true);
         return connectionFactory;
     }
