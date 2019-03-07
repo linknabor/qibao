@@ -46,11 +46,11 @@ public interface WuyeService {
 	// 12.查询是否已经用过红包
 	public String queryCouponIsUsed(String userId);
 	
-	//13.查询小区信息
-	public CellListVO querySectList();
+	//13.模糊查询小区信息
+	public CellListVO getVagueSectByName(String sect_name);
 	
 	//14.根据数据类型查询指定的物业单元信息
-	public CellListVO querySectList(String sect_id, String build_id, String unit_id, String data_type);
+	public CellListVO querySectHeXieList(String sect_id, String build_id, String unit_id, String data_type);
 	
 	//修正已绑定房屋用户房屋不正确的问题
 	public <T> void fixUserBindedHouses(String userId);

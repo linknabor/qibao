@@ -2,6 +2,8 @@ package com.yumu.hexie.integration.wuye;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Map;
 import java.util.Properties;
 
@@ -29,7 +31,6 @@ public class WuyeUtil {
 
 	private static String REQUEST_ADDRESS = "http://www.e-shequ.com/mobileInterface/mobile/";
 	private static String SYSTEM_NAME;
-	private static String CSPID;
 	private static Properties props = new Properties();
 	
 	static {
@@ -44,7 +45,6 @@ public class WuyeUtil {
 		
 		REQUEST_ADDRESS = props.getProperty("requestUrl");
 		SYSTEM_NAME = props.getProperty("sysName");
-		CSPID = props.getProperty("cspId");
 	}
 
 	// 接口地址
@@ -63,8 +63,8 @@ public class WuyeUtil {
 	private static final String WX_PAY_NOTICE = "wechatPayQuerySDO.do?user_id=%s&bill_id=%s&stmt_id=%s&trade_water_id=%s&package=%s"; // 微信支付返回
 	//private static final String GET_LOCATION_URL = "getGeographicalPositionSDO.do"; // 用户地理位置
 	private static final String COUPON_USE_QUERY_URL = "conponUseQuerySDO.do?user_id=%s";
-	private static final String SECT_LIST_URL = "querySectByCspIdSDO.do?csp_id=%s";
-	private static final String MNG_LIST_URL = "queryMngByIdSDO.do?sect_id=%s&build_id=%s&unit_id=%s&data_type=%s";
+	private static final String SECT_VAGUE_LIST_URL = "queryVagueSectByNameSDO.do"+ "?sect_name=%s";//合协社区物业缴费的小区级联 模糊查询小区
+	private static final String MNG_HEXIE_LIST_URL = "queryHeXieMngByIdSDO.do"+ "?sect_id=%s&build_id=%s&unit_id=%s&data_type=%s";//合协社区物业缴费的小区级联
 	private static final String PAY_WATER_URL = "getMngCellByTradeIdSDO.do?user_id=%s&trade_water_id=%s"; // 获取支付记录涉及的房屋
 	
 	public static BaseResult<BillListVO> quickPayInfo(String stmtId, String currPage, String totalCount) {
@@ -154,30 +154,32 @@ public class WuyeUtil {
 		
 		String url = REQUEST_ADDRESS + String.format(COUPON_USE_QUERY_URL, userId);
 		return (BaseResult<String>)httpGet(url,String.class);
-		
 	}
 	
-	//13.查询小区列表
-	public static BaseResult<CellListVO> getSectList()
-	{
-		String url = REQUEST_ADDRESS + String.format(SECT_LIST_URL, CSPID);
+	//13.根据名称模糊查询合协社区小区列表
+	public static BaseResult<CellListVO> getVagueSectByName(String sect_name) {
+		//中文打码
+		String sectName = "";
+		try {
+			sectName = URLEncoder.encode(sect_name,"GBK");
+		} catch (UnsupportedEncodingException e) {
+			sectName = sect_name;
+		}
+		String url = REQUEST_ADDRESS + String.format(SECT_VAGUE_LIST_URL, sectName);
 		return (BaseResult<CellListVO>)httpGet(url,CellListVO.class);
 	}
 	
 	//14.根据ID查询指定类型的物业信息
-	public static BaseResult<CellListVO> getMngList(String sect_id, String build_id, String unit_id, String data_type)
-	{
-		String url = REQUEST_ADDRESS + String.format(MNG_LIST_URL, sect_id, build_id, unit_id, data_type);
+	public static BaseResult<CellListVO> getMngHeXieList(String sect_id, String build_id, String unit_id, String data_type){
+		String url = REQUEST_ADDRESS + String.format(MNG_HEXIE_LIST_URL, sect_id,build_id,unit_id,data_type);
 		return (BaseResult<CellListVO>)httpGet(url,CellListVO.class);
 	}
 	
 	//15.根据交易ID查询涉及到的房屋
-	public static BaseResult<String> getPayWaterToCell(String userId, String trade_water_id)
-	{
+	public static BaseResult<String> getPayWaterToCell(String userId, String trade_water_id) {
 		String url = REQUEST_ADDRESS + String.format(PAY_WATER_URL, userId, trade_water_id);
 		return (BaseResult<String>)httpGet(url, String.class);
 	}
-	
 	
 	private static BaseResult httpGet(String reqUrl, Class c){
 		HttpGet get = new HttpGet(reqUrl);

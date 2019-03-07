@@ -88,24 +88,25 @@ public class WuyeController extends BaseController {
 		}
 	}
 
-	@RequestMapping(value = "/getSect", method = RequestMethod.GET)
+	//根据ID查询指定类型的合协社区物业信息
+	@RequestMapping(value = "/getHeXieCellById", method = RequestMethod.GET)
 	@ResponseBody
-	public BaseResult<List<CellVO>> getSect(@ModelAttribute(Constants.USER)User user)throws Exception {
-		CellListVO cellMng = wuyeService.querySectList();
-		if (cellMng != null && cellMng.getSect_info() != null) {
-			return BaseResult.successResult(cellMng.getSect_info());
+	public BaseResult<CellVO> getHeXieCellById(@ModelAttribute(Constants.USER)User user, @RequestParam(required=false) String sect_id, 
+			@RequestParam(required=false) String build_id, @RequestParam(required=false) String unit_id, @RequestParam(required=false) String data_type)throws Exception {
+		CellListVO cellMng = wuyeService.querySectHeXieList(sect_id, build_id, unit_id, data_type);
+		if (cellMng != null) {
+			return BaseResult.successResult(cellMng);
 		} else {
 			return BaseResult.successResult(new ArrayList<CellVO>());
 		}
 	}
-	
-	@RequestMapping(value = "/getcellbyid", method = RequestMethod.GET)
+		
+	@RequestMapping(value = "/getVagueSectByName", method = RequestMethod.GET)
 	@ResponseBody
-	public BaseResult<CellVO> getCellById(@ModelAttribute(Constants.USER)User user, @RequestParam(required=false) String sect_id, 
-			@RequestParam(required=false) String build_id, @RequestParam(required=false) String unit_id, @RequestParam(required=false) String data_type)throws Exception {
-		CellListVO cellMng = wuyeService.querySectList(sect_id, build_id, unit_id, data_type);
-		if (cellMng != null) {
-			return BaseResult.successResult(cellMng);
+	public BaseResult<CellVO> getVagueSectByName(@ModelAttribute(Constants.USER)User user, @RequestParam(required=false) String sect_name)throws Exception {
+		CellListVO cellMng = wuyeService.getVagueSectByName(sect_name);
+		if (cellMng != null && cellMng.getSect_info() != null) {
+			return BaseResult.successResult(cellMng.getSect_info());
 		} else {
 			return BaseResult.successResult(new ArrayList<CellVO>());
 		}
@@ -330,7 +331,7 @@ public class WuyeController extends BaseController {
 	
 	@Async
 	private void sendMsg(User user){
-		String msg = "您好，欢迎加入东湖e家园。您已获得价值10元红包一份。感谢您对东湖e家园的支持。";
+		String msg = "您好，欢迎加入七宝物业云。您已获得价值10元红包一份。感谢您对东湖e家园的支持。";
 		smsService.sendMsg(user.getId(), user.getTel(), msg, 11, 3);
 	}
 	
@@ -413,12 +414,8 @@ public class WuyeController extends BaseController {
 								log.error("couponId : " + coupon_id + ", " + e.getMessage());
 							}
 						}
-						
-						
 					}
-					
 				}
-				
 			}
 		}
 		

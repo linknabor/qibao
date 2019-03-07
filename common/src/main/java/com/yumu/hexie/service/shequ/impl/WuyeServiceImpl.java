@@ -222,15 +222,16 @@ public class WuyeServiceImpl<T> implements WuyeService {
 		return r.getResult();
 	}
 
+	//根据名称模糊查询合协社区小区列表
 	@Override
-	public CellListVO querySectList() {
-		return WuyeUtil.getSectList().getData();
+	public CellListVO getVagueSectByName(String sect_name) {
+		BaseResult<CellListVO> s = WuyeUtil.getVagueSectByName(sect_name);
+		return WuyeUtil.getVagueSectByName(sect_name).getData();
 	}
 
 	@Override
-	public CellListVO querySectList(String sect_id, String build_id,
-			String unit_id, String data_type) {
-		return WuyeUtil.getMngList(sect_id, build_id, unit_id, data_type).getData();
+	public CellListVO querySectHeXieList(String sect_id, String build_id, String unit_id, String data_type) {
+		return WuyeUtil.getMngHeXieList(sect_id, build_id, unit_id, data_type).getData();
 	}
 
 	@Override
