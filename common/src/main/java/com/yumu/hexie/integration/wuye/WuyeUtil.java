@@ -161,8 +161,8 @@ public class WuyeUtil {
 		//中文打码
 		String sectName = "";
 		try {
-			sectName = URLEncoder.encode(sect_name,"GBK");
-		} catch (UnsupportedEncodingException e) {
+			sectName = URLEncoder.encode(sect_name, "GBK");
+		} catch (Exception e) {
 			sectName = sect_name;
 		}
 		String url = REQUEST_ADDRESS + String.format(SECT_VAGUE_LIST_URL, sectName);

@@ -225,7 +225,6 @@ public class WuyeServiceImpl<T> implements WuyeService {
 	//根据名称模糊查询合协社区小区列表
 	@Override
 	public CellListVO getVagueSectByName(String sect_name) {
-		BaseResult<CellListVO> s = WuyeUtil.getVagueSectByName(sect_name);
 		return WuyeUtil.getVagueSectByName(sect_name).getData();
 	}
 
