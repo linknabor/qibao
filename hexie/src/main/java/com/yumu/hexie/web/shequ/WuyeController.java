@@ -105,8 +105,8 @@ public class WuyeController extends BaseController {
 	@ResponseBody
 	public BaseResult<CellVO> getVagueSectByName(@ModelAttribute(Constants.USER)User user, @RequestParam(required=false) String sect_name)throws Exception {
 		CellListVO cellMng = wuyeService.getVagueSectByName(sect_name);
-		if (cellMng != null && cellMng.getSect_info() != null) {
-			return BaseResult.successResult(cellMng.getSect_info());
+		if (cellMng != null) {
+			return BaseResult.successResult(cellMng);
 		} else {
 			return BaseResult.successResult(new ArrayList<CellVO>());
 		}
