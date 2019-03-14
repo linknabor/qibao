@@ -134,9 +134,9 @@ public class UserController extends BaseController{
             return new BaseResult<UserInfo>().failMsg("用户不存在！");
 		}
 		
-		if (StringUtil.isEmpty(userAccount.getBindOpenId())) {
-			return new BaseResult<UserInfo>().failCode(BaseResult.NEED_MAIN_LOGIN); 
-		}
+//		if (StringUtil.isEmpty(userAccount.getBindOpenId())) {
+//			return new BaseResult<UserInfo>().failCode(BaseResult.NEED_MAIN_LOGIN); 
+//		}
 
         return new BaseResult<UserInfo>().success(new UserInfo(userAccount,
             operatorService.isOperator(HomeServiceConstant.SERVICE_TYPE_REPAIR,userAccount.getId())));
